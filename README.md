@@ -1,7 +1,5 @@
 # jenkins-terraform-eks
 
-# CICD-Terraform-EKS
-
 This repository contains the code for deploying an Amazon EKS (Elastic Kubernetes Service) cluster using Terraform. The deployment process involves setting up an EC2 instance to run Jenkins, which then automates the creation and management of the EKS cluster through a CI/CD pipeline.
 
 ## Repository Structure
@@ -17,6 +15,8 @@ Before starting the deployment, ensure you have the following:
 
 - An AWS Account
 - AWS Root Account Access Keys
+- terraform installation
+  https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli 
 
 #### Generating Root Account Access Keys
 
