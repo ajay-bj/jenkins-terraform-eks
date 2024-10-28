@@ -1,72 +1,52 @@
+
 pipeline {
     agent any
     environment {
-        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        AWS_DEFAULT_REGION = 'us-east-2'
+        AWS_REGION = 'us-east-1'
     }
-    stages{
-        stage('Checkout SCM'){
-            steps{
-                script{
-                    //Generate  using pipeline syntax
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                script {
+                    echo "Checkout from SCM"
+                    checkout scm
                 }
             }
         }
-         stage('Initializing Terraform'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform init'
+
+        stage('Terraform Init') {
+            steps {
+                dir('eks') {
+                    withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)]) {
+                        sh "terraform init"
                     }
                 }
             }
         }
-        stage('Formating terraform code'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform fmt'
-                    }
+
+        stage('Terraform Plan') {
+            steps {
+                dir('eks') {
+                    sh "terraform plan"
                 }
             }
         }
-        stage('Validating Terraform'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform validate'
-                    }
+
+        stage('Terraform Apply') {
+            steps {
+                dir('eks') {
+                    sh "terraform apply --auto-approve"
                 }
             }
         }
-        stage('Previewing the infrastructure'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform plan'
-                    }
-                    input(message: "Are you sure to proceed?", ok: "proceed")
-                }
-            }
-        }
-        stage('Creating/Destroying an EKS cluster'){
-            steps{
-                script{
-                    dir('EKS'){
-                         sh 'terraform $action --auto-approve'
-                    }
-                }
-            }
-        }
-        stage("Deploying Nginx"){
-            steps{
-                script{
-                    dir('EKS/configuration-files'){
-                        sh 'aws eks update-kubeconfig --name my-eks-cluster'
-                        sh 'kubectl apply -f deployment.yml'
-                        sh 'kubectl apply -f service.yml'
-                    }
+
+        stage('Terraform Destroy') {
+            steps {
+                dir('eks') {
+                    sh "aws eks update-kubeconfig --name my-eks-cluster --region ${AWS_REGION}"
+                    sh "kubectl get nodes"
+                    input message: 'Finished using the EKS cluster? (Click "Proceed" to continue)'
+                    sh "terraform destroy -auto-approve"
                 }
             }
         }
