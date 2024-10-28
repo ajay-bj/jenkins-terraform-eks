@@ -2,7 +2,7 @@
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = "eks_cluster_vpc"
+  name = "vpc_for_eks"
   cidr = var.vpc_cidr
 
   azs             = ["us-east-1a", "us-east-1b"]
