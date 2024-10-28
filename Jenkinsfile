@@ -43,10 +43,11 @@ pipeline {
         stage('Terraform Destroy') {
             steps {
                 dir('eks') {
-                    sh "aws eks update-kubeconfig --name my-eks-cluster --region ${AWS_REGION}"
+                    sh "aws eks update-kubeconfig --name my-eks-cluster --region us-east-1 }"
                     sh "kubectl get nodes"
                     input message: 'Finished using the EKS cluster? (Click "Proceed" to continue)'
                     sh "terraform destroy -auto-approve"
+                    input message: 'deleted cluster ? (Click "Proceed" to continue)'
                 }
             }
         }
