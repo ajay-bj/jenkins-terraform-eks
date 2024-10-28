@@ -27,8 +27,9 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 dir('eks') {
-                    withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)])
-                    sh "terraform plan"
+                    withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)]) {
+                    sh "terraform plan" 
+                    }
                 }
             }
         }
@@ -36,8 +37,9 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 dir('eks') {
-                    withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)])
+                    withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)]){
                     sh "terraform apply --auto-approve"
+                    }
                 }
             }
         }
@@ -45,12 +47,13 @@ pipeline {
         stage('Terraform Destroy') {
             steps {
                 dir('eks') {
-                    withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)])
+                    withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)]) {
                     sh "aws eks update-kubeconfig --name my-eks-cluster --region us-east-1 }"
                     sh "kubectl get nodes"
                     input message: 'Finished using the EKS cluster? (Click "Proceed" to continue)'
                     sh "terraform destroy -auto-approve"
                     input message: 'deleted cluster ? (Click "Proceed" to continue)'
+                    }
                 }
             }
         }
