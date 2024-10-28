@@ -4,8 +4,8 @@ This repository contains the code for deploying an Amazon EKS (Elastic Kubernete
 
 ## Repository Structure
 
-- `EKS/`: Contains the Terraform files needed to create the EKS cluster.
-- `jenkins-server/`: Contains the Terraform files needed to set up an EC2 instance that runs Jenkins.
+- `eks/ folder  Contains the Terraform files needed to create the EKS cluster.
+-  jenkins-file
 
 ## Deployment Steps
 
@@ -15,8 +15,17 @@ Before starting the deployment, ensure you have the following:
 
 - An AWS Account
 - AWS Root Account Access Keys
+  
 - terraform installation
-  https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli 
+  https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
+
+- reffrence video guide
+  https://www.youtube.com/watch?v=q6tjkmX_DPM&t=1100s
+
+- s3 & dynamodb state lock + backend guide
+  https://developer.hashicorp.com/terraform/language/backend/s3
+  https://medium.com/@chauhanhimani512/how-to-provision-amazon-eks-cluster-using-terraform-aa96d9a00391
+
 
 #### Generating Root Account Access Keys
 
@@ -32,8 +41,13 @@ To generate root account access keys for the AWS CLI:
 
 The first step is to deploy an EC2 instance that will run Jenkins. This instance will have user data that installs Terraform, kubectl, Jenkins, and the AWS CLI.
 
-1. Navigate to the `jenkins-server` directory.
+1. Navigate to the `jenkins-server` ec2 .
+
+3. - terraform installation
+  https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli
 2. Initialize and apply the Terraform configuration:
+
    ```bash
    terraform init
    terraform apply
+   terraform destroy
