@@ -48,10 +48,10 @@ pipeline {
             steps {
                 dir('eks') {
                     withCredentials([aws(credentialsId: 'aws-cred', region: AWS_REGION)]) {
-                    sh "aws eks update-kubeconfig --name my-eks-cluster --region us-east-1 }"
+                    sh "aws eks update-kubeconfig --name my-eks-cluster --region us-east-1"
                     sh "kubectl get nodes"
                     input message: 'Finished using the EKS cluster? (Click "Proceed" to continue)'
-                    sh "terraform destroy -auto-approve"
+                    sh "terraform destroy --auto-approve"
                     input message: 'deleted cluster ? (Click "Proceed" to continue)'
                     }
                 }
